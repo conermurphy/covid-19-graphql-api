@@ -1,45 +1,14 @@
 import Papa from 'papaparse';
-import fs, { createReadStream } from 'fs';
+import fs from 'fs';
 import axios from 'axios';
 
-// /* eslint-disable */
-// const papaConfig = {
-//   delimiter: "", // auto-detect
-//   newline: "", // auto-detect
-//   quoteChar: '"',
-//   escapeChar: '"',
-//   header: true,
-//   transformHeader: undefined,
-//   dynamicTyping: false,
-//   preview: 5,
-//   encoding: '',
-//   worker: false,
-//   comments: false,
-//   step: undefined,
-//   complete(results, file) {
-//     console.log('Parsing complete:', results, file);
-//   },
-//   error: undefined,
-//   download: true,
-//   downloadRequestHeaders: undefined,
-//   downloadRequestBody: undefined,
-//   skipEmptyLines: false,
-//   chunk: undefined,
-//   fastMode: undefined,
-//   beforeFirstChunk: undefined,
-//   withCredentials: undefined,
-//   transform: undefined,
-//   delimitersToGuess: [',', '\t', '|', ';', Papa.RECORD_SEP, Papa.UNIT_SEP],
-// };
-// /* eslint-enable */
-
-function fileDownload() {
+function writeFile() {
   console.log('starting file download');
-  const CSVWriteStream = fs.createWriteStream('./data/04-20-2020.csv');
-  return axios({
+  const CSVWriteStream = fs.createWriteStream('./data/04-21-2020.csv');
+  axios({
     method: 'get',
     url:
-      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-20-2020.csv',
+      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-21-2020.csv',
     responseType: 'stream',
   })
     .then(res => {
@@ -49,21 +18,28 @@ function fileDownload() {
   // console.log('file download is complete');
 }
 
-function fileRead() {
-  console.log('starting to read file');
-  let data = '';
-  const CSVReadSteam = fs.createReadStream('./data/04-20-2020.csv', 'utf-8');
+function readFile() {
+  const file = fs.createReadStream('./data/04-21-2020.csv', 'utf-8');
+  // const JSONfile = fs.createWriteStream('./data/json/04-21-2020.json', 'utf-8');
 
-  CSVReadSteam.on('data', chunk => {
-    data += chunk;
-  }).on('end', () => {
-    console.log(data);
+  const data = [];
+
+  Papa.parse(file, {
+    worker: true, // Don't bog down the main thread if its a big file
+    header: true,
+    step(result) {
+      // console.log(result.data);
+      data.push(result.data);
+    },
+    complete(results) {
+      console.log(data);
+    },
   });
 }
 
 async function readData() {
-  await fileDownload();
-  await fileRead();
+  await writeFile();
+  await readFile();
 }
 
-readData();
+readFile();
