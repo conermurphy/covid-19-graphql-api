@@ -32,7 +32,6 @@ function parseFile() {
       worker: true,
       header: true,
       step(result) {
-        // console.log(result.data);
         data.push(result.data);
       },
       complete() {
@@ -46,7 +45,6 @@ function parseFile() {
 function jsonWriter(data) {
   const jsonData = new Promise((res, rej) => {
     console.log('starting to write file');
-
     const JSONWriteStream = fs.createWriteStream('./data/json/04-22-2020.json');
 
     JSONWriteStream.write(JSON.stringify(data), 'UTF-8');
