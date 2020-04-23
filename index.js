@@ -60,6 +60,7 @@ function writeJSONFile(data, date) {
   return jsonData;
 }
 
+// function to get the date before downloading so don't need to manually change the date each day.
 function getDate() {
   const datePromise = new Promise((res, rej) => {
     const day = new Date().getDate() - 1;
@@ -73,9 +74,9 @@ function getDate() {
 
 async function getNewData() {
   const date = await getDate();
-  console.log(date);
+  // console.log(date);
   const url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
-  console.log(url);
+  // console.log(url);
   await downloadFile(url, date);
   const data = await parseFile(date);
   await writeJSONFile(data, date);
