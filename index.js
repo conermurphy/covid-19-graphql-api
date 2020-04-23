@@ -6,7 +6,7 @@ function downloadFile(url, date) {
   // Creating a new promise to download the file
   const csvDownload = new Promise((res, rej) => {
     // console.log('starting file download');
-    const CSVWriteStream = fs.createWriteStream(`./data/${date}.csv`); // Opening a write stream to a new file
+    const CSVWriteStream = fs.createWriteStream(`./data/csv/${date}.csv`); // Opening a write stream to a new file
 
     axios({
       method: 'get',
@@ -29,7 +29,7 @@ function downloadFile(url, date) {
 function parseFile(date) {
   // Creating a new promise to parse the donwloaded file from the downloadFile promise
   const csvData = new Promise((res, rej) => {
-    const file = fs.createReadStream(`./data/${date}.csv`, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
+    const file = fs.createReadStream(`./data/csv/${date}.csv`, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
     const data = []; // Creating a new empty array to store the converted data in JSON format.
     Papa.parse(file, {
       worker: true,
