@@ -6,40 +6,48 @@ function downloadFile(url, date) {
   // Creating a new promise to download the file
   return new Promise((res, rej) => {
     // console.log('starting file download');
-    const CSVWriteStream = fs.createWriteStream(`./data/csv/${date}.csv`); // Opening a write stream to a new file
-
-    axios({
-      method: 'get',
-      url, // URL to download file which is passed down from the parent function
-      responseType: 'stream',
-    })
-      .then(response => {
-        response.data.pipe(CSVWriteStream); // Pipe the response promise into the writeStream to write the file
+    try {
+      const CSVWriteStream = fs.createWriteStream(`./data/csv/${date}.csv`); // Opening a write stream to a new file
+      axios({
+        method: 'get',
+        url, // URL to download file which is passed down from the parent function
+        responseType: 'stream',
       })
-      .catch(err => console.log(err)); // Catch any errors
+        .then(response => {
+          response.data.pipe(CSVWriteStream); // Pipe the response promise into the writeStream to write the file
+        })
+        .catch(err => console.log(err)); // Catch any errors
 
-    CSVWriteStream.on('finish', () => {
-      // On the finish of the writeStream resolve the promise to the present function
-      res('file write is complete');
-    });
+      CSVWriteStream.on('finish', () => {
+        // On the finish of the writeStream resolve the promise to the present function
+        res('file write is complete');
+      });
+    } catch (err) {
+      rej(err);
+    }
   });
 }
 
 function parseFile(date) {
   // Creating a new promise to parse the donwloaded file from the downloadFile promise
   return new Promise((res, rej) => {
-    const file = fs.createReadStream(`./data/csv/${date}.csv`, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
-    const data = []; // Creating a new empty array to store the converted data in JSON format.
-    Papa.parse(file, {
-      worker: true,
-      header: true, // Setting the first line of the file to be the keys in each JSON object
-      step(result) {
-        data.push(result.data); // On each chunk of data or step, push the data into the empty data array.
-      },
-      complete() {
-        res(data); // Once the file is fully parsed resolve the promise and pass in the data array to be returned to the parent function.
-      },
-    });
+    try {
+      const file = fs.createReadStream(`./data/csv/${date}.csv`, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
+      const data = []; // Creating a new empty array to store the converted data in JSON format.
+      Papa.parse(file, {
+        worker: true,
+        header: true, // Setting the first line of the file to be the keys in each JSON object
+        step(result) {
+          data.push(result.data); // On each chunk of data or step, push the data into the empty data array.
+        },
+        complete() {
+          res(data); // Once the file is fully parsed resolve the promise and pass in the data array to be returned to the parent function.
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      rej(err);
+    }
   });
 }
 
@@ -60,11 +68,16 @@ function writeJSONFile(data, date) {
 // function to get the date before downloading so don't need to manually change the date each day.
 function getDate() {
   return new Promise((res, rej) => {
-    const day = new Date().getDate() - 1;
-    const month = `0${new Date().getMonth() + 1}`;
-    const year = new Date().getFullYear();
-    const fullDate = `${month}-${day}-${year}`;
-    res(fullDate);
+    try {
+      const day = new Date().getDate() - 1;
+      const month = `0${new Date().getMonth() + 1}`;
+      const year = new Date().getFullYear();
+      const fullDate = `${month}-${day}-${year}`;
+      res(fullDate);
+    } catch (err) {
+      console.log(err);
+      rej(err);
+    }
   });
 }
 
