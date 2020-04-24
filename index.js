@@ -1,112 +1,34 @@
-import Papa from 'papaparse';
-import fs from 'fs';
-import axios from 'axios';
+import express from 'express';
+// import fs from 'fs';
+import dataFetcher from './src/dataFetcher.js';
 
-function downloadFile(url, date) {
-  // Creating a new promise to download the file
-  return new Promise((res, rej) => {
-    // console.log('starting file download');
-    const csvDirectory = './data/csv';
-    const csvFiles = [];
-    fs.readdir(csvDirectory, (err, files) => {
-      if (err) {
-        return console.log(`Unable to read files in this directory: ${err}`);
-      }
-      files.forEach(file => {
-        csvFiles.push(file);
-      });
-    });
-    if (!csvFiles.includes(`${date}.csv`)) {
-      try {
-        const CSVWriteStream = fs.createWriteStream(`./data/csv/${date}.csv`); // Opening a write stream to a new file
-        axios({
-          method: 'get',
-          url, // URL to download file which is passed down from the parent function
-          responseType: 'stream',
-        })
-          .then(response => {
-            response.data.pipe(CSVWriteStream); // Pipe the response promise into the writeStream to write the file
-          })
-          .catch(err => console.log(err)); // Catch any errors
+const app = express();
 
-        CSVWriteStream.on('finish', () => {
-          // On the finish of the writeStream resolve the promise to the present function
-          res('file write is complete');
-        });
-      } catch (err) {
-        rej(err);
-      }
-    }
-    res('file is already downloaded');
-  });
-}
+const getDate = () => {
+  try {
+    const day = new Date().getDate() - 1;
+    const month = `0${new Date().getMonth() + 1}`;
+    const year = new Date().getFullYear();
+    const fullDate = `${month}-${day}-${year}`;
+    return fullDate;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
 
-function parseFile(date) {
-  // Creating a new promise to parse the donwloaded file from the downloadFile promise
-  return new Promise((res, rej) => {
-    try {
-      const file = fs.createReadStream(`./data/csv/${date}.csv`, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
-      const data = []; // Creating a new empty array to store the converted data in JSON format.
-      Papa.parse(file, {
-        worker: true,
-        header: true, // Setting the first line of the file to be the keys in each JSON object
-        step(result) {
-          data.push(result.data); // On each chunk of data or step, push the data into the empty data array.
-        },
-        complete() {
-          res(data); // Once the file is fully parsed resolve the promise and pass in the data array to be returned to the parent function.
-        },
-      });
-    } catch (err) {
-      console.log(err);
-      rej(err);
-    }
-  });
-}
+const currentDate = getDate();
 
-function writeJSONFile(data, date) {
-  // Creating a new promise for the writing of the JSON file, with the passed in data from the parsing promise.
-  return new Promise((res, rej) => {
-    try {
-      const JSONWriteStream = fs.createWriteStream(`./data/json/${date}.json`); // Open up a new write stream to the new file in JSON folder for that day.
+dataFetcher(currentDate);
 
-      JSONWriteStream.write(JSON.stringify(data), 'UTF-8'); // Write the data to the writeStream opened above, but first stringify the data to write it.
+// const currentJSONFile = fs.createReadStream(`./data/json/${currentDate}.json`);
 
-      JSONWriteStream.on('finish', () => {
-        res(JSONWriteStream.end()); // On the finish event from the writeStream, close off the stream and resolve the promise.
-      });
-    } catch (err) {
-      console.log(err);
-      rej(err);
-    }
-    // console.log('starting to write file');
-  });
-}
+// currentJSONFile.on('data', chunk => {
+//   console.log(chunk);
+// });
 
-// function to get the date before downloading so don't need to manually change the date each day.
-function getDate() {
-  return new Promise((res, rej) => {
-    try {
-      const day = new Date().getDate() - 1;
-      const month = `0${new Date().getMonth() + 1}`;
-      const year = new Date().getFullYear();
-      const fullDate = `${month}-${day}-${year}`;
-      res(fullDate);
-    } catch (err) {
-      console.log(err);
-      rej(err);
-    }
-  });
-}
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
-async function getNewData() {
-  const date = await getDate();
-  // console.log(date);
-  const url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
-  // console.log(url);
-  await downloadFile(url, date);
-  const data = await parseFile(date);
-  await writeJSONFile(data, date);
-}
-
-getNewData();
+app.listen(3000, () => console.log('The Server is listening on port 3000'));
