@@ -6,25 +6,38 @@ function downloadFile(url, date) {
   // Creating a new promise to download the file
   return new Promise((res, rej) => {
     // console.log('starting file download');
-    try {
-      const CSVWriteStream = fs.createWriteStream(`./data/csv/${date}.csv`); // Opening a write stream to a new file
-      axios({
-        method: 'get',
-        url, // URL to download file which is passed down from the parent function
-        responseType: 'stream',
-      })
-        .then(response => {
-          response.data.pipe(CSVWriteStream); // Pipe the response promise into the writeStream to write the file
-        })
-        .catch(err => console.log(err)); // Catch any errors
-
-      CSVWriteStream.on('finish', () => {
-        // On the finish of the writeStream resolve the promise to the present function
-        res('file write is complete');
+    const csvDirectory = './data/csv';
+    const csvFiles = [];
+    fs.readdir(csvDirectory, (err, files) => {
+      if (err) {
+        return console.log(`Unable to read files in this directory: ${err}`);
+      }
+      files.forEach(file => {
+        csvFiles.push(file);
       });
-    } catch (err) {
-      rej(err);
+    });
+    if (!csvFiles.includes(`${date}.csv`)) {
+      try {
+        const CSVWriteStream = fs.createWriteStream(`./data/csv/${date}.csv`); // Opening a write stream to a new file
+        axios({
+          method: 'get',
+          url, // URL to download file which is passed down from the parent function
+          responseType: 'stream',
+        })
+          .then(response => {
+            response.data.pipe(CSVWriteStream); // Pipe the response promise into the writeStream to write the file
+          })
+          .catch(err => console.log(err)); // Catch any errors
+
+        CSVWriteStream.on('finish', () => {
+          // On the finish of the writeStream resolve the promise to the present function
+          res('file write is complete');
+        });
+      } catch (err) {
+        rej(err);
+      }
     }
+    res('file is already downloaded');
   });
 }
 
