@@ -1,28 +1,42 @@
-import express from 'express';
-// import fs from 'fs';
+import { createRequire } from 'module';
 import dataFetcher from './src/dataFetcher.js';
+import dateFetcher from './src/dateFetcher.js';
+import covidData from './data/json/04-26-2020.json';
 
-const app = express();
+const require = createRequire(import.meta.url);
+const { ApolloServer, gql } = require('apollo-server');
 
-const getDate = () => {
-  try {
-    const day = new Date().getDate() - 1;
-    const month = `0${new Date().getMonth() + 1}`;
-    const year = new Date().getFullYear();
-    const fullDate = `${month}-${day}-${year}`;
-    return fullDate;
-  } catch (err) {
-    console.log(err);
-    return err;
+// dataFetcher(dateFetcher());
+
+const typeDefs = gql`
+  type Key {
+    FIPS: String
+    Admin2: String
+    Province_State: String
+    Country_Region: String
+    Last_Update: String
+    Lat: String
+    Long_: String
+    Confirmed: String
+    Deaths: String
+    Recovered: String
+    Active: String
+    Combined_Key: String
   }
+
+  type Query {
+    data: [Key]
+  }
+`;
+
+const resolvers = {
+  Query: {
+    data: () => covidData,
+  },
 };
 
-const currentDate = getDate();
+const server = new ApolloServer({ typeDefs, resolvers });
 
-dataFetcher(currentDate);
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
 });
-
-app.listen(3000, () => console.log('The Server is listening on port 3000'));
