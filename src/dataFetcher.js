@@ -70,7 +70,7 @@ function writeJSONFile(data, date) {
   });
 }
 
-function checkToDownload() {
+function checkToDownload(date) {
   return new Promise((res, rej) => {
     try {
       const csvDirectory = './data/csv/';
@@ -81,18 +81,19 @@ function checkToDownload() {
           return console.log(`Unable to read files in this directory: ${err}`);
         }
 
-        const promises = files.forEach(
+        files.forEach(
           file =>
             new Promise((resolve, reject) => {
               try {
-                resolve(csvFiles.push(file));
+                csvFiles.push(file);
+                resolve(csvFiles);
               } catch (err) {
                 reject(err);
               }
             })
         );
-        console.log(csvFiles);
-        res(Promise.all(promises));
+        // console.log(csvFiles);
+        csvFiles.includes(`${date}.csv`) ? res(false) : res(true);
       });
     } catch (err) {
       rej(err);
@@ -101,9 +102,9 @@ function checkToDownload() {
 }
 
 export default async function dataFetcher(date) {
-  // const download = await checkToDownload();
+  const download = await checkToDownload(date);
   const url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
-  await downloadFile(url, date);
+  download ? await downloadFile(url, date) : undefined;
   const data = await parseFile(date);
   await writeJSONFile(data, date);
 }

@@ -21,12 +21,6 @@ const currentDate = getDate();
 
 dataFetcher(currentDate);
 
-// const currentJSONFile = fs.createReadStream(`./data/json/${currentDate}.json`);
-
-// currentJSONFile.on('data', chunk => {
-//   console.log(chunk);
-// });
-
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
