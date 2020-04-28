@@ -6,7 +6,7 @@ function downloadFile(url, date) {
   // Creating a new promise to download the file
   return new Promise((res, rej) => {
     try {
-      const CSVWriteStream = fs.createWriteStream(`./data/csv/${date}.csv`); // Opening a write stream to a new file
+      const CSVWriteStream = fs.createWriteStream(`./data/dailyReports/csv/${date}.csv`); // Opening a write stream to a new file
       axios({
         method: 'get',
         url, // URL to download file which is passed down from the parent function
@@ -31,7 +31,7 @@ function parseFile(date) {
   // Creating a new promise to parse the downloaded file from the downloadFile promise
   return new Promise((res, rej) => {
     try {
-      const file = fs.createReadStream(`./data/csv/${date}.csv`, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
+      const file = fs.createReadStream(`./data/dailyReports/csv/${date}.csv`, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
       const data = []; // Creating a new empty array to store the converted data in JSON format.
       Papa.parse(file, {
         worker: true,
@@ -55,7 +55,7 @@ function writeJSONFile(data, date) {
   // Creating a new promise for the writing of the JSON file, with the passed in data from the parsing promise.
   return new Promise((res, rej) => {
     try {
-      const JSONWriteStream = fs.createWriteStream(`./data/json/${date}.json`); // Open up a new write stream to the new file in JSON folder for that day.
+      const JSONWriteStream = fs.createWriteStream(`./data/dailyReports/json/${date}.json`); // Open up a new write stream to the new file in JSON folder for that day.
 
       JSONWriteStream.write(JSON.stringify(data), 'UTF-8'); // Write the data to the writeStream opened above, but first stringify the data to write it.
 
@@ -73,7 +73,7 @@ function writeJSONFile(data, date) {
 function checkToDownload(date) {
   return new Promise((res, rej) => {
     try {
-      const csvDirectory = './data/csv/';
+      const csvDirectory = './data/dailyReports/csv/';
       const csvFiles = [];
 
       fs.readdir(csvDirectory, (err, files) => {
