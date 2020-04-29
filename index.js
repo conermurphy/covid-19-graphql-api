@@ -40,7 +40,7 @@ const typeDefs = gql`
   type Query {
     getData: [Data]
     getCases: [Case]
-    getCombinedKey(filter: String): Data
+    getCombinedKey(filter: String): [Data]
   }
 `;
 
@@ -53,7 +53,7 @@ const resolvers = {
       return covidData;
     },
     getCombinedKey(parent, args, context, info) {
-      return covidData.find(data => data.Combined_Key === args.filter);
+      return covidData.filter(data => data.Combined_Key.includes(args.filter));
     },
   },
   Data: {
