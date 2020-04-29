@@ -11,21 +11,30 @@ dataFetcher(dateFetcher());
 const typeDefs = gql`
   type Data {
     FIPS: String
-    Admin2: String
     Province_State: String
     Country_Region: String
     Combined_Key: String
+    Case: Case
+    Position: Position
+    Admin: Admin
+  }
+
+  type Admin {
     Last_Update: String
+    Admin2: String
+  }
+
+  type Position {
     Lat: String
     Long_: String
-    case: Case
   }
 
   type Case {
-    Confirmed: String!
-    Deaths: String!
-    Recovered: String!
-    Active: String!
+    Combined_Key: String
+    Confirmed: String
+    Deaths: String
+    Recovered: String
+    Active: String
   }
 
   type Query {
@@ -48,12 +57,24 @@ const resolvers = {
     },
   },
   Data: {
-    case(parent) {
+    Case(parent) {
       return {
         Confirmed: parent.Confirmed,
         Deaths: parent.Deaths,
         Recovered: parent.Recovered,
         Active: parent.Active,
+      };
+    },
+    Admin(parent) {
+      return {
+        Last_Update: parent.Last_Update,
+        Admin2: parent.Admin2,
+      };
+    },
+    Position(parent) {
+      return {
+        Lat: parent.Lat,
+        Long_: parent.Long_,
       };
     },
   },
