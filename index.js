@@ -1,12 +1,9 @@
 import { createRequire } from 'module';
-import dataFetcher from './src/dataFetcher.js';
-import dateFetcher from './src/dateFetcher.js';
-import covidData from './data/dailyReports/json/04-28-2020.json';
+// import dataFetcher from './src/dataFetcher.js';
+import covidData from './data/dailyReports/dailyReport.json';
 
 const require = createRequire(import.meta.url);
 const { ApolloServer, gql } = require('apollo-server');
-
-dataFetcher(dateFetcher());
 
 const typeDefs = gql`
   type Data {
