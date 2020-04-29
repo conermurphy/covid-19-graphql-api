@@ -1,7 +1,7 @@
 import { createRequire } from 'module';
 import dataFetcher from './src/dataFetcher.js';
 import dateFetcher from './src/dateFetcher.js';
-import covidData from './data/dailyReports/json/04-26-2020.json';
+import covidData from './data/dailyReports/json/04-28-2020.json';
 
 const require = createRequire(import.meta.url);
 const { ApolloServer, gql } = require('apollo-server');
@@ -40,7 +40,7 @@ const typeDefs = gql`
   type Query {
     getData: [Data]
     getCases: [Case]
-    getCombinedKey(Combined_Key: String): Data
+    getCombinedKey(filter: String): Data
   }
 `;
 
@@ -53,7 +53,7 @@ const resolvers = {
       return covidData;
     },
     getCombinedKey(parent, args, context, info) {
-      return covidData.find(data => data.Combined_Key === args.Combined_Key);
+      return covidData.find(data => data.Combined_Key === args.filter);
     },
   },
   Data: {
