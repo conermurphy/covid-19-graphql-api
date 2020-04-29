@@ -102,10 +102,12 @@ function writeJSONFile(data) {
 //   });
 // }
 
-export default async function dataFetcher() {
+async function dataFetcher() {
   const date = await dateFetcher();
   const url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
   await downloadFile(url, date);
   const data = await parseFile(date);
   await writeJSONFile(data, date);
 }
+
+dataFetcher();

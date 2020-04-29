@@ -1,5 +1,4 @@
 import { createRequire } from 'module';
-// import dataFetcher from './src/dataFetcher.js';
 import covidData from './data/dailyReports/dailyReport.json';
 
 const require = createRequire(import.meta.url);
