@@ -14,18 +14,23 @@ const typeDefs = gql`
     Admin2: String
     Province_State: String
     Country_Region: String
+    Combined_Key: String
     Last_Update: String
     Lat: String
     Long_: String
-    Confirmed: String
-    Deaths: String
-    Recovered: String
-    Active: String
-    Combined_Key: String
+    case: Case
+  }
+
+  type Case {
+    Confirmed: String!
+    Deaths: String!
+    Recovered: String!
+    Active: String!
   }
 
   type Query {
     getData: [Data]
+    getCases: [Case]
     getCombinedKey(Combined_Key: String): Data
   }
 `;
@@ -35,28 +40,24 @@ const resolvers = {
     getData() {
       return covidData;
     },
+    getCases() {
+      return covidData;
+    },
     getCombinedKey(parent, args, context, info) {
       return covidData.find(data => data.Combined_Key === args.Combined_Key);
     },
   },
+  Data: {
+    case(parent) {
+      return {
+        Confirmed: parent.Confirmed,
+        Deaths: parent.Deaths,
+        Recovered: parent.Recovered,
+        Active: parent.Active,
+      };
+    },
+  },
 };
-
-// getCaseData(parent, args, context, info) {
-//   const caseData = {
-//     confirmed: null,
-//     deaths: null,
-//     recovered: null,
-//     active: null,
-//   };
-//   const index = covidData.findIndex(data => data.Combined_Key === args.Combined_Key);
-
-//   caseData.confirmed = covidData[index].confirmed;
-//   caseData.deaths = covidData[index].deaths;
-//   caseData.recovered = covidData[index].recovered;
-//   caseData.active = covidData[index].active;
-
-//   return caseData;
-// },
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
