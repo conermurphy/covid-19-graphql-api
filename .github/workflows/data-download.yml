@@ -17,14 +17,13 @@ jobs:
         node-version: '14.x'
     - run: npm install
     - run: npm run download
-    - name: Commit files
-        run: |
-          cd main
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "Update json" -a
-      - name: Push changes
+    - name: stage files
+      run: git add .
+    - name: commit files
+      run: git commit -m "Updated JSON data files"
+    - name: push code to master
+      run: git push origin master  
+    - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
