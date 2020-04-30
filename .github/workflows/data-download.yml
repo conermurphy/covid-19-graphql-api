@@ -2,7 +2,7 @@ name: data-download
 
 on:
   schedule: 
-      - cron: '30 4 * * *'
+      - cron: '15 * * * *'
 
 jobs:
   build:
@@ -17,5 +17,15 @@ jobs:
         node-version: '14.x'
     - run: npm install
     - run: npm run download
-      env:
-        CI: true
+    -name: Commit files
+        run: |
+          cd main
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Update json" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: main
