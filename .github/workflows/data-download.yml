@@ -17,8 +17,8 @@ jobs:
         node-version: '14.x'
     - run: npm install
     - run: npm run download
-    -name: Commit files
-        run:
+    - name: Commit files
+        run: |
           cd main
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
