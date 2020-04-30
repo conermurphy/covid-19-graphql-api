@@ -2,7 +2,7 @@ name: data-download
 
 on:
   schedule: 
-      - cron: '15,30,45,0 * * * *'
+      - cron: '30 4 * * *'
 
 jobs:
   build:
