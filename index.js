@@ -1,16 +1,16 @@
 import { createRequire } from 'module';
-import covidData from './data/dailyReports/dailyReport.json';
+import dailyData from './data/dailyReports/dailyReport.json';
 
 const require = createRequire(import.meta.url);
 const { ApolloServer, gql } = require('apollo-server');
 
 const typeDefs = gql`
-  type Data {
+  type DailyData {
     FIPS: String
     Province_State: String
     Country_Region: String
     Combined_Key: String
-    Case: Case
+    DailyCase: DailyCase
     Position: Position
     Admin: Admin
   }
@@ -25,7 +25,7 @@ const typeDefs = gql`
     Long_: String
   }
 
-  type Case {
+  type DailyCase {
     Combined_Key: String
     Confirmed: String
     Deaths: String
@@ -34,25 +34,25 @@ const typeDefs = gql`
   }
 
   type Query {
-    getData: [Data]
-    getCases: [Case]
-    getCombinedKey(filter: String): [Data]
+    getDailyData: [DailyData]
+    getDailyCases: [DailyCase]
+    getDailyCombinedKey(filter: String): [DailyData]
   }
 `;
 
 const resolvers = {
   Query: {
-    getData() {
-      return covidData;
+    getDailyData() {
+      return dailyData;
     },
-    getCases() {
-      return covidData;
+    getDailyCases() {
+      return dailyData;
     },
-    getCombinedKey(parent, args) {
-      return covidData.filter(data => data.Combined_Key.includes(args.filter));
+    getDailyCombinedKey(parent, args) {
+      return dailyData.filter(data => data.Combined_Key.includes(args.filter));
     },
   },
-  Data: {
+  DailyData: {
     Case(parent) {
       return {
         Confirmed: parent.Confirmed,
