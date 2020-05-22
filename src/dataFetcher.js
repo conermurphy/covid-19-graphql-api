@@ -71,37 +71,6 @@ function writeJSONFile(data) {
   });
 }
 
-// function checkToDownload(date) {
-//   return new Promise((res, rej) => {
-//     try {
-//       const csvDirectory = './data/dailyReports/';
-//       const csvFiles = [];
-
-//       fs.readdir(csvDirectory, (err, files) => {
-//         if (err) {
-//           return console.log(`Unable to read files in this directory: ${err}`);
-//         }
-
-//         files.forEach(
-//           file =>
-//             new Promise((resolve, reject) => {
-//               try {
-//                 csvFiles.push(file);
-//                 resolve(csvFiles);
-//               } catch (err) {
-//                 reject(err);
-//               }
-//             })
-//         );
-//         // console.log(csvFiles);
-//         csvFiles.includes(`${date}.csv`) ? res(false) : res(true);
-//       });
-//     } catch (err) {
-//       rej(err);
-//     }
-//   });
-// }
-
 async function dataFetcher() {
   const date = await dateFetcher();
   const url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
