@@ -81,13 +81,6 @@ const date = dateFetcher();
 const dailyReportURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
 const dailyFileName = './data/dailyReports/dailyReport';
 
-// const timeSeriesConfirmedURL =
-//   'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv';
-// const timeSeriesDeathsURL =
-//   'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv';
-// const timeSeriesRecoveredURL =
-//   'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv';
-
 dataFetcher(dailyReportURL, dailyFileName);
 
 ['confirmed', 'deaths', 'recovered'].forEach(status => {
