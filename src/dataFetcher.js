@@ -3,11 +3,11 @@ import fs from 'fs';
 import axios from 'axios';
 import dateFetcher from './dateFetcher.js';
 
-function downloadFile(url) {
+function downloadFile(url, filePath) {
   // Creating a new promise to download the file
   return new Promise((res, rej) => {
     try {
-      const CSVWriteStream = fs.createWriteStream('./data/dailyReports/dailyReport.csv'); // Opening a write stream to a new file
+      const CSVWriteStream = fs.createWriteStream(filePath); // Opening a write stream to a new file
       axios({
         method: 'get',
         url, // URL to download file which is passed down from the parent function
@@ -28,11 +28,11 @@ function downloadFile(url) {
   });
 }
 
-function parseFile() {
+function parseFile(filePath) {
   // Creating a new promise to parse the downloaded file from the downloadFile promise
   return new Promise((res, rej) => {
     try {
-      const file = fs.createReadStream('./data/dailyReports/dailyReport.csv', 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
+      const file = fs.createReadStream(filePath, 'utf-8'); // Opening a readStream to the location of the downloaded file in CSV Format
       const data = []; // Creating a new empty array to store the converted data in JSON format.
       Papa.parse(file, {
         worker: true,
@@ -52,11 +52,11 @@ function parseFile() {
   });
 }
 
-function writeJSONFile(data) {
+function writeJSONFile(data, filePath) {
   // Creating a new promise for the writing of the JSON file, with the passed in data from the parsing promise.
   return new Promise((res, rej) => {
     try {
-      const JSONWriteStream = fs.createWriteStream('./data/dailyReports/dailyReport.json'); // Open up a new write stream to the new file in JSON folder for that day.
+      const JSONWriteStream = fs.createWriteStream(filePath); // Open up a new write stream to the new file in JSON folder for that day.
 
       JSONWriteStream.write(JSON.stringify(data), 'UTF-8'); // Write the data to the writeStream opened above, but first stringify the data to write it.
 
@@ -71,12 +71,14 @@ function writeJSONFile(data) {
   });
 }
 
-async function dataFetcher() {
-  const date = await dateFetcher();
-  const url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
-  await downloadFile(url, date);
-  const data = await parseFile(date);
-  await writeJSONFile(data, date);
+async function dataFetcher(url, filePath) {
+  await downloadFile(url, `${filePath}.csv`);
+  const data = await parseFile(`${filePath}.csv`);
+  await writeJSONFile(data, `${filePath}.json`);
 }
 
-dataFetcher();
+const date = dateFetcher();
+const dailyReportURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
+const dailyFileName = './data/dailyReports/dailyReport';
+
+dataFetcher(dailyReportURL, dailyFileName);
