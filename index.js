@@ -48,7 +48,7 @@ const resolvers = {
     getCases() {
       return covidData;
     },
-    getCombinedKey(parent, args, context, info) {
+    getCombinedKey(parent, args) {
       return covidData.filter(data => data.Combined_Key.includes(args.filter));
     },
   },
