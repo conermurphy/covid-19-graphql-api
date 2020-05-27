@@ -2,8 +2,8 @@ import Papa from 'papaparse';
 import fs from 'fs';
 import axios from 'axios';
 import dateFetcher from './dateFetcher.js';
-// import dataMerger from './dataMerger.js';
 import writeJSONFile from './functions/jsonWriter.js';
+// import dataMerger from './dataMerger.js';
 
 function downloadFile(url, filePath) {
   // Creating a new promise to download the file
@@ -83,8 +83,8 @@ function downloadTimeSeries() {
         const timeSeriesFileName = `./data/timeSeriesReports/inputs/${status}`;
         const timeSeriesURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_global.csv`;
         dataFetcher(timeSeriesURL, timeSeriesFileName);
-        res('downloaded timeSeries');
       });
+      res('downloaded timeSeries');
     } catch (err) {
       console.error(err);
       rej(err);
@@ -95,8 +95,7 @@ function downloadTimeSeries() {
 async function dataFetcherWrapper() {
   await downloadDaily();
   await downloadTimeSeries();
+  // await dataMerger();
 }
 
 dataFetcherWrapper();
-
-// dataMerger();

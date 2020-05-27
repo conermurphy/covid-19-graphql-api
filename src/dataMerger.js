@@ -69,20 +69,28 @@ function dataPopulator(file, index) {
 }
 
 function dataMerger() {
-  // Looping over each file we imported
-  [confirmedData, deathData, recoveredData].forEach((data, index) => {
-    countryPopulator(data); // function to add a unqiue list of countries to the array.
-    dataPopulator(data, index); // populating data under each country as a sub object.
-  });
+  return new Promise((res, rej) => {
+    try {
+      // Looping over each file we imported.
+      [(confirmedData, deathData, recoveredData)].forEach((data, index) => {
+        countryPopulator(data); // function to add a unqiue list of countries to the array.
+        dataPopulator(data, index); // populating data under each country as a sub object.
+      });
 
-  // Sorting the populated array by uniqueId A-Z.
-  const sortedArray = newConfirmedArray.sort((a, b) => {
-    const nameA = a.uniqueId.toUpperCase();
-    const nameB = b.uniqueId.toUpperCase();
-    return nameA < nameB ? -1 : 1;
-  });
+      // Sorting the populated array by uniqueId A-Z.
+      const sortedArray = newConfirmedArray.sort((a, b) => {
+        const nameA = a.uniqueId.toUpperCase();
+        const nameB = b.uniqueId.toUpperCase();
+        return nameA < nameB ? -1 : 1;
+      });
 
-  writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
+      writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
+      res('data merged');
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
 }
 
-export default dataMerger;
+dataMerger();
