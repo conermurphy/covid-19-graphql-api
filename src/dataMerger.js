@@ -11,12 +11,19 @@ confirmedData.forEach(data => {
   };
 
   const confirmed = {
+    admin: {},
     confirmed: {},
   };
 
   const arrayData = Object.entries(data);
 
   arrayData.forEach(d => {
+    if (d[0] === 'Province/State') {
+      confirmed.admin.provinceState = d[1];
+    }
+    if (d[0] === 'Country/Region') {
+      confirmed.admin.countryRegion = d[1];
+    }
     if (d[0].slice(0, 1).match(/^[0-9]/)) {
       const cleanedDate = d[0]
         .split('/')
@@ -27,8 +34,11 @@ confirmedData.forEach(data => {
   });
 
   newConfirmedArray.push(countryData);
+  // console.log(countryData);
   console.log(confirmed);
-  newConfirmedArray.forEach(item => {});
+  const found = newConfirmedArray.find(el => el.provinceState !== '' && el.provinceState === data['Province/State']);
+  // found.confirmed = confirmed;
+  // console.log(found);
 });
 
 // console.log(newConfirmedArray);
