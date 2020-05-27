@@ -38,7 +38,7 @@ function dataPopulator(file, index) {
           .split('/')
           .map(s => s.padStart(2, 0))
           .join('');
-        data[fileName][cleanedDate] = i[1];
+        data[fileName][cleanedDate] = i[1]; // eslint-disable-line
       }
     });
     const found = newConfirmedArray.find(
