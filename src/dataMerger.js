@@ -1,6 +1,7 @@
-import confirmedData from '../data/timeSeriesReports/confirmed.json';
-import deathData from '../data/timeSeriesReports/deaths.json';
-import recoveredData from '../data/timeSeriesReports/recovered.json';
+import confirmedData from '../data/timeSeriesReports/inputs/confirmed.json';
+import deathData from '../data/timeSeriesReports/inputs/deaths.json';
+import recoveredData from '../data/timeSeriesReports/inputs/recovered.json';
+import writeJSONFile from './functions/jsonWriter.js';
 
 const newConfirmedArray = [];
 
@@ -40,3 +41,5 @@ confirmedData.forEach(data => {
 });
 
 console.log(newConfirmedArray);
+
+writeJSONFile(newConfirmedArray, './data/timeSeriesReports/allTimeSeries.json');
