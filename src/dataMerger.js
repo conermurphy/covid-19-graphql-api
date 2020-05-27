@@ -50,9 +50,10 @@ function dataPopulator(file, index) {
   });
 }
 
+// Looping over each file we imported
 [confirmedData, deathData, recoveredData].forEach((data, index) => {
-  countryPopulator(data);
-  dataPopulator(data, index);
+  countryPopulator(data); // function to add a unqiue list of countries to the array.
+  dataPopulator(data, index); // populating data under each country as a sub object.
 });
 
-writeJSONFile(newConfirmedArray, './data/timeSeriesReports/allTimeSeries.json');
+writeJSONFile(newConfirmedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
