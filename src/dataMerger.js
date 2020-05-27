@@ -42,7 +42,6 @@ function dataPopulator(file, index) {
 
   // Looping over each line of data in the passed in file so we can create arrays based on each line.
   file.forEach(d => {
-    console.log(d);
     // Creating an array of each line of data using Object.entries().
     const arrayData = Object.entries(d);
     // Looping over each item in array created from Object.entries().
@@ -69,17 +68,21 @@ function dataPopulator(file, index) {
   });
 }
 
-// Looping over each file we imported
-[confirmedData, deathData, recoveredData].forEach((data, index) => {
-  countryPopulator(data); // function to add a unqiue list of countries to the array.
-  dataPopulator(data, index); // populating data under each country as a sub object.
-});
+function dataMerger() {
+  // Looping over each file we imported
+  [confirmedData, deathData, recoveredData].forEach((data, index) => {
+    countryPopulator(data); // function to add a unqiue list of countries to the array.
+    dataPopulator(data, index); // populating data under each country as a sub object.
+  });
 
-// Sorting the populated array by uniqueId A-Z.
-const sortedArray = newConfirmedArray.sort((a, b) => {
-  const nameA = a.uniqueId.toUpperCase();
-  const nameB = b.uniqueId.toUpperCase();
-  return nameA < nameB ? -1 : 1;
-});
+  // Sorting the populated array by uniqueId A-Z.
+  const sortedArray = newConfirmedArray.sort((a, b) => {
+    const nameA = a.uniqueId.toUpperCase();
+    const nameB = b.uniqueId.toUpperCase();
+    return nameA < nameB ? -1 : 1;
+  });
 
-writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
+  writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
+}
+
+dataMerger();
