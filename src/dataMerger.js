@@ -38,37 +38,40 @@ function dataPopulator(file, index) {
   const data = {};
   data[fileName] = {};
 
-  console.log(data);
+  const arrayData = Object.entries(file);
+
+  arrayData.forEach(d => {
+    if (d[0].slice(0, 1).match(/^[0-9]/)) {
+      const cleanedDate = d[0]
+        .split('/')
+        .map(s => s.padStart(2, 0))
+        .join('');
+      file[fileName][cleanedDate] = d[1];
+    }
+    console.log(newConfirmedArray);
+    console.log(file);
+    // const found = newConfirmedArray.find(
+    //   el =>
+    //     el.uniqueId ===
+    //     `${file['Province/State'].replace(' ', '-')}${file['Province/State'] === '' ? '' : '-'}${file['Country/Region'].replace(' ', '-')}`
+    // );
+    // found[fileName] = data[fileName];
+  });
 }
 
-// confirmedData.forEach(data => {
-//   const confirmed = {
-//     admin: {},
-//     confirmed: {},
-//   };
+// writeJSONFile(newConfirmedArray, './data/timeSeriesReports/allTimeSeries.json');
 
-//   const arrayData = Object.entries(data);
+// ---
 
 //   arrayData.forEach(d => {
+
 //     if (d[0] === 'Province/State') {
 //       confirmed.admin.provinceState = d[1];
 //     }
 //     if (d[0] === 'Country/Region') {
 //       confirmed.admin.countryRegion = d[1];
 //     }
-//     if (d[0].slice(0, 1).match(/^[0-9]/)) {
-//       const cleanedDate = d[0]
-//         .split('/')
-//         .map(s => s.padStart(2, 0))
-//         .join('');
-//       confirmed.confirmed[cleanedDate] = d[1];
-//     }
-//   });
 
 //   const found = newConfirmedArray.find(el => el.provinceState === data['Province/State'] && el.countryRegion === data['Country/Region']);
 //   found.confirmed = confirmed.confirmed;
 // });
-
-// console.log(newConfirmedArray);
-
-writeJSONFile(newConfirmedArray, './data/timeSeriesReports/allTimeSeries.json');
