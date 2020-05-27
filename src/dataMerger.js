@@ -4,6 +4,7 @@ import recoveredData from '../data/timeSeriesReports/inputs/recovered.json';
 import writeJSONFile from './functions/jsonWriter.js';
 
 const newConfirmedArray = [];
+const regex = /([ ',])/g;
 
 function countryPopulator(file) {
   file.forEach(data => {
@@ -11,9 +12,10 @@ function countryPopulator(file) {
       return;
     }
     newConfirmedArray.push({
-      uniqueId: `${data['Province/State'].replace(/([ ])/g, '-')}${data['Province/State'] === '' ? '' : '-'}${data[
-        'Country/Region'
-      ].replace(/([ ])/g, '-')}`,
+      uniqueId: `${data['Province/State'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Country/Region'].replace(
+        regex,
+        '-'
+      )}`,
       provinceState: data['Province/State'],
       countryRegion: data['Country/Region'],
     });
@@ -44,7 +46,7 @@ function dataPopulator(file, index) {
     const found = newConfirmedArray.find(
       el =>
         el.uniqueId ===
-        `${d['Province/State'].replace(/([ ])/g, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(/([ ])/g, '-')}`
+        `${d['Province/State'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(regex, '-')}`
     );
     found[fileName] = data[fileName];
   });
@@ -56,11 +58,10 @@ function dataPopulator(file, index) {
   dataPopulator(data, index); // populating data under each country as a sub object.
 });
 
-writeJSONFile(
-  newConfirmedArray.sort((a, b) => {
-    const nameA = a.uniqueId.toUpperCase();
-    const nameB = b.uniqueId.toUpperCase();
-    return nameA < nameB ? -1 : 1;
-  }),
-  './data/timeSeriesReports/allTimeSeries.json'
-); // Sorting the array and writing the new array to a file.
+const sortedArray = newConfirmedArray.sort((a, b) => {
+  const nameA = a.uniqueId.toUpperCase();
+  const nameB = b.uniqueId.toUpperCase();
+  return nameA < nameB ? -1 : 1;
+});
+
+writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json'); // Sorting the array and writing the new array to a file.
