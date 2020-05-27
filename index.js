@@ -95,9 +95,6 @@ const resolvers = {
   },
 };
 
-class allConfirmedData {
-}
-
 const server = new ApolloServer({ typeDefs, resolvers });
 
 server.listen().then(({ url }) => {
