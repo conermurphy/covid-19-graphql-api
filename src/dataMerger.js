@@ -11,10 +11,9 @@ function countryPopulator(file) {
       return;
     }
     newConfirmedArray.push({
-      uniqueId: `${data['Province/State'].replace(' ', '-')}${data['Province/State'] === '' ? '' : '-'}${data['Country/Region'].replace(
-        ' ',
-        '-'
-      )}`,
+      uniqueId: `${data['Province/State'].replace(/([ ])/g, '-')}${data['Province/State'] === '' ? '' : '-'}${data[
+        'Country/Region'
+      ].replace(/([ ])/g, '-')}`,
       provinceState: data['Province/State'],
       countryRegion: data['Country/Region'],
     });
@@ -52,7 +51,7 @@ function dataPopulator(file, index) {
     const found = newConfirmedArray.find(
       el =>
         el.uniqueId ===
-        `${d['Province/State'].replace(' ', '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(' ', '-')}`
+        `${d['Province/State'].replace(/([ ])/g, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(/([ ])/g, '-')}`
     );
     found[fileName] = data[fileName];
   });
