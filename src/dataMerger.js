@@ -20,13 +20,6 @@ function countryPopulator(file) {
   });
 }
 
-[confirmedData, deathData, recoveredData].forEach((data, index) => {
-  countryPopulator(data);
-  dataPopulator(data, index);
-});
-
-// console.log(newConfirmedArray);
-
 function dataPopulator(file, index) {
   const fileName = {
     0: 'confirmed',
@@ -56,5 +49,10 @@ function dataPopulator(file, index) {
     found[fileName] = data[fileName];
   });
 }
+
+[confirmedData, deathData, recoveredData].forEach((data, index) => {
+  countryPopulator(data);
+  dataPopulator(data, index);
+});
 
 writeJSONFile(newConfirmedArray, './data/timeSeriesReports/allTimeSeries.json');
