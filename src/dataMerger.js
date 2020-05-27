@@ -85,4 +85,4 @@ function dataMerger() {
   writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
 }
 
-dataMerger();
+export default dataMerger;

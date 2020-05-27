@@ -2,7 +2,8 @@ import Papa from 'papaparse';
 import fs from 'fs';
 import axios from 'axios';
 import dateFetcher from './dateFetcher.js';
-import writeJSONFile from './functions/jsonWriter';
+// import dataMerger from './dataMerger.js';
+import writeJSONFile from './functions/jsonWriter.js';
 
 function downloadFile(url, filePath) {
   // Creating a new promise to download the file
@@ -59,14 +60,43 @@ async function dataFetcher(url, filePath) {
   await writeJSONFile(data, `${filePath}.json`);
 }
 
-const date = dateFetcher();
-const dailyReportURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
-const dailyFileName = './data/dailyReports/dailyReport';
+function downloadDaily() {
+  return new Promise((res, rej) => {
+    try {
+      const date = dateFetcher();
+      const dailyReportURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
+      const dailyFileName = './data/dailyReports/dailyReport';
 
-dataFetcher(dailyReportURL, dailyFileName);
+      dataFetcher(dailyReportURL, dailyFileName);
+      res('downloaded dailyReport');
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
+}
 
-['confirmed', 'deaths', 'recovered'].forEach(status => {
-  const timeSeriesFileName = `./data/timeSeriesReports/inputs/${status}`;
-  const timeSeriesURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_global.csv`;
-  dataFetcher(timeSeriesURL, timeSeriesFileName);
-});
+function downloadTimeSeries() {
+  return new Promise((res, rej) => {
+    try {
+      ['confirmed', 'deaths', 'recovered'].forEach(async status => {
+        const timeSeriesFileName = `./data/timeSeriesReports/inputs/${status}`;
+        const timeSeriesURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_global.csv`;
+        dataFetcher(timeSeriesURL, timeSeriesFileName);
+        res('downloaded timeSeries');
+      });
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
+}
+
+async function dataFetcherWrapper() {
+  await downloadDaily();
+  await downloadTimeSeries();
+}
+
+dataFetcherWrapper();
+
+// dataMerger();
