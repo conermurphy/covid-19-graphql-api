@@ -10,6 +10,8 @@ confirmedData.forEach(data => {
     countryRegion: data['Country/Region'],
   };
 
+  newConfirmedArray.push(countryData);
+
   const confirmed = {
     admin: {},
     confirmed: {},
@@ -33,12 +35,8 @@ confirmedData.forEach(data => {
     }
   });
 
-  newConfirmedArray.push(countryData);
-  // console.log(countryData);
-  console.log(confirmed);
-  const found = newConfirmedArray.find(el => el.provinceState !== '' && el.provinceState === data['Province/State']);
-  // found.confirmed = confirmed;
-  // console.log(found);
+  const found = newConfirmedArray.find(el => el.provinceState === data['Province/State'] && el.countryRegion === data['Country/Region']);
+  found.confirmed = confirmed.confirmed;
 });
 
-// console.log(newConfirmedArray);
+console.log(newConfirmedArray);
