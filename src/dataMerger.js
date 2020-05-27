@@ -34,7 +34,11 @@ function dataPopulator(file, index) {
     1: 'dead',
     2: 'recovered',
   }[index];
-  console.log(fileName);
+
+  const data = {};
+  data[fileName] = {};
+
+  console.log(data);
 }
 
 // confirmedData.forEach(data => {
