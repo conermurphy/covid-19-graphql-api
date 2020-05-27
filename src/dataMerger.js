@@ -56,4 +56,11 @@ function dataPopulator(file, index) {
   dataPopulator(data, index); // populating data under each country as a sub object.
 });
 
-writeJSONFile(newConfirmedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
+writeJSONFile(
+  newConfirmedArray.sort((a, b) => {
+    const nameA = a.uniqueId.toUpperCase();
+    const nameB = b.uniqueId.toUpperCase();
+    return nameA < nameB ? -1 : 1;
+  }),
+  './data/timeSeriesReports/allTimeSeries.json'
+); // Sorting the array and writing the new array to a file.
