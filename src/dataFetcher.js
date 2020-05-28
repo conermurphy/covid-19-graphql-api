@@ -77,14 +77,25 @@ function downloadDaily() {
 }
 
 function downloadTimeSeries() {
-  return new Promise((res, rej) => {
+  return new Promise(async (res, rej) => {
     try {
-      ['confirmed', 'deaths', 'recovered'].forEach(status => {
-        const timeSeriesFileName = `./data/timeSeriesReports/inputs/${status}`;
-        const timeSeriesURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_global.csv`;
-        dataFetcher(timeSeriesURL, timeSeriesFileName);
-      });
-      res('downloaded timeSeries');
+      await Promise.all(
+        ['confirmed', 'deaths', 'recovered'].map(
+          status =>
+            new Promise((resolve, reject) => {
+              try {
+                const timeSeriesFileName = `./data/timeSeriesReports/inputs/${status}`;
+                const timeSeriesURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_global.csv`;
+                dataFetcher(timeSeriesURL, timeSeriesFileName);
+                resolve('downloaded');
+              } catch (err) {
+                console.error(err);
+                reject(err);
+              }
+            })
+        )
+      );
+      await res('downloaded timeSeries');
     } catch (err) {
       console.error(err);
       rej(err);
