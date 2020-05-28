@@ -3,7 +3,7 @@ import fs from 'fs';
 import axios from 'axios';
 import dateFetcher from './dateFetcher.js';
 import writeJSONFile from './functions/jsonWriter.js';
-// import dataMerger from './dataMerger.js';
+import dataMerger from './dataMerger.js';
 
 function downloadFile(url, filePath) {
   // Creating a new promise to download the file
@@ -79,7 +79,7 @@ function downloadDaily() {
 function downloadTimeSeries() {
   return new Promise((res, rej) => {
     try {
-      ['confirmed', 'deaths', 'recovered'].forEach(async status => {
+      ['confirmed', 'deaths', 'recovered'].forEach(status => {
         const timeSeriesFileName = `./data/timeSeriesReports/inputs/${status}`;
         const timeSeriesURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_global.csv`;
         dataFetcher(timeSeriesURL, timeSeriesFileName);
@@ -95,7 +95,7 @@ function downloadTimeSeries() {
 async function dataFetcherWrapper() {
   await downloadDaily();
   await downloadTimeSeries();
-  // await dataMerger();
+  await dataMerger();
 }
 
 dataFetcherWrapper();

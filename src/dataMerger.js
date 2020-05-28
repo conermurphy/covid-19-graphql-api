@@ -1,6 +1,4 @@
-import confirmedData from '../data/timeSeriesReports/inputs/confirmed.json';
-import deathData from '../data/timeSeriesReports/inputs/deaths.json';
-import recoveredData from '../data/timeSeriesReports/inputs/recovered.json';
+import fs from 'fs';
 import writeJSONFile from './functions/jsonWriter.js';
 
 const newConfirmedArray = [];
@@ -69,23 +67,36 @@ function dataPopulator(file, index) {
 }
 
 function dataMerger() {
-  return new Promise((res, rej) => {
+  return new Promise(async (res, rej) => {
     try {
       // Looping over each file we imported.
-      [(confirmedData, deathData, recoveredData)].forEach((data, index) => {
-        countryPopulator(data); // function to add a unqiue list of countries to the array.
-        dataPopulator(data, index); // populating data under each country as a sub object.
-      });
+      await Promise.all(
+        ['confirmed', 'deaths', 'recovered'].map(
+          (file, index) =>
+            new Promise((resolve, reject) => {
+              try {
+                fs.readFile(`./data/timeSeriesReports/inputs/${file}.json`, 'utf-8', (err, data) => {
+                  const json = JSON.parse(data);
+                  countryPopulator(json); // function to add a unqiue list of countries to the array.
+                  dataPopulator(json, index); // populating data under each country as a sub object.
+                  resolve(newConfirmedArray);
+                });
+              } catch (err) {
+                console.error(err);
+                reject(err);
+              }
+            })
+        )
+      );
 
       // Sorting the populated array by uniqueId A-Z.
-      const sortedArray = newConfirmedArray.sort((a, b) => {
+      const sortedArray = await newConfirmedArray.sort((a, b) => {
         const nameA = a.uniqueId.toUpperCase();
         const nameB = b.uniqueId.toUpperCase();
         return nameA < nameB ? -1 : 1;
       });
 
-      writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json'); // Writing the new array to a file.
-      res('data merged');
+      await res(writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json')); // Writing the new array to a file.
     } catch (err) {
       console.error(err);
       rej(err);
@@ -93,4 +104,4 @@ function dataMerger() {
   });
 }
 
-dataMerger();
+export default dataMerger;
