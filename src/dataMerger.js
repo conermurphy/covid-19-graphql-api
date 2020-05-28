@@ -66,7 +66,8 @@ function dataPopulator(file, index) {
   });
 }
 
-function dataMerger() {
+export default function() {
+  console.log('running dataMerger');
   return new Promise(async (res, rej) => {
     try {
       // Looping over each file we imported.
@@ -96,12 +97,10 @@ function dataMerger() {
         return nameA < nameB ? -1 : 1;
       });
 
-      await res(writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json')); // Writing the new array to a file.
+      res(writeJSONFile(sortedArray, './data/timeSeriesReports/allTimeSeries.json')); // Writing the new array to a file.
     } catch (err) {
       console.error(err);
       rej(err);
     }
   });
 }
-
-export default dataMerger;
