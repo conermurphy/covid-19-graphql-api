@@ -1,8 +1,5 @@
 import { createRequire } from 'module';
 import dailyData from './data/dailyReports/dailyReport.json';
-import confirmedData from './data/timeSeriesReports/confirmed.json';
-import deathData from './data/timeSeriesReports/deaths.json';
-import recoveredData from './data/timeSeriesReports/recovered.json';
 
 const require = createRequire(import.meta.url);
 const { ApolloServer, gql } = require('apollo-server');
@@ -16,14 +13,6 @@ const typeDefs = gql`
     DailyCase: DailyCase
     Position: Position
     Admin: Admin
-  }
-
-  type TimeSeriesData {
-    ProvinceState: String
-    CountryRegion: String
-    Lat: String
-    Long: String
-    Data: String
   }
 
   type Admin {
@@ -48,8 +37,6 @@ const typeDefs = gql`
     getDailyData: [DailyData]
     getDailyCases: [DailyCase]
     getDailyCombinedKey(filter: String): [DailyData]
-    getAllTimeSeries: [TimeSeriesData]
-    getAllConfirmedDataTS: [TimeSeriesData]
   }
 `;
 
@@ -63,12 +50,6 @@ const resolvers = {
     },
     getDailyCombinedKey(parent, args) {
       return dailyData.filter(data => data.Combined_Key.includes(args.filter));
-    },
-    getAllTimeSeries() {
-      return confirmedData;
-    },
-    getAllConfirmedDataTS() {
-      return allConfirmedData();
     },
   },
   DailyData: {
