@@ -22,7 +22,7 @@ function downloadFile(url, filePath) {
 
       CSVWriteStream.on('finish', () => {
         // On the finish of the writeStream resolve the promise to the present function
-        res('file write is complete');
+        res();
       });
     } catch (err) {
       rej(err);
@@ -55,20 +55,16 @@ function parseFile(filePath) {
 }
 
 async function dataFetcher(url, filePath) {
-  await downloadFile(url, `${filePath}.csv`);
-  const data = await parseFile(`${filePath}.csv`);
-  await writeJSONFile(data, `${filePath}.json`);
-}
-
-function downloadDaily() {
-  return new Promise((res, rej) => {
+  // return a new promise for the fetching of data, this is not 100% required as async promises will always return a promise but want to be clear.
+  return new Promise(async (res, rej) => {
     try {
-      const date = dateFetcher();
-      const dailyReportURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
-      const dailyFileName = './data/dailyReports/dailyReport';
-
-      dataFetcher(dailyReportURL, dailyFileName);
-      res('downloaded dailyReport');
+      // call the download file function with the passed in url and filepath from the calling functions below.
+      await downloadFile(url, `${filePath}.csv`);
+      // await the downloads to be complete before transforming the data and storing it in a value.
+      const data = await parseFile(`${filePath}.csv`);
+      // take the returned data and pipe it into a write stream and then once complete resolve this function.
+      await writeJSONFile(data, `${filePath}.json`).then(() => res());
+      // Once the writing promise resolves, this function will be resolved which if downloading the time series, will resolve that individual download but will be waiting on the others before resolving the main function and moving to merging the data.
     } catch (err) {
       console.error(err);
       rej(err);
@@ -76,17 +72,47 @@ function downloadDaily() {
   });
 }
 
+function downloadDaily() {
+  // return a new promise
+  return new Promise((res, rej) => {
+    try {
+      // get todays date from the date function.
+      const date = dateFetcher();
+
+      // set download vars.
+      const dailyReportURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${date}.csv`;
+      const dailyFileName = './data/dailyReports/dailyReport';
+
+      // call the data fetching function to download the data
+      dataFetcher(dailyReportURL, dailyFileName);
+      res(); // resolve the promise
+    } catch (err) {
+      // catch errors.
+      console.error(err);
+      rej(err);
+    }
+  });
+}
+
 function downloadTimeSeries() {
-  Promise.all(
+  return Promise.all(
+    // Return a promise.all for each of the looped over values returning a new promise
     ['confirmed', 'deaths', 'recovered'].map(
       status =>
-        new Promise(async (resolve, reject) => {
+        // return a new promise for each value looped over to be passed into the promise.all array
+        new Promise((resolve, reject) => {
           try {
+            // setting the file name using the values in the original array above.
             const timeSeriesFileName = `./data/timeSeriesReports/inputs/${status}`;
+            // setting the download URL.
             const timeSeriesURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_global.csv`;
-            console.log('downloaded');
-            await dataFetcher(timeSeriesURL, timeSeriesFileName);
+
+            // function to download the data from the url and convert it to JSON.
+            dataFetcher(timeSeriesURL, timeSeriesFileName).then(() => {
+              resolve(); // On completion of the data fetching and conversion, complete this promise in the promise.all array.
+            });
           } catch (err) {
+            // Catch any errors and log them.
             console.error(err);
             reject(err);
           }
