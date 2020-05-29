@@ -67,7 +67,6 @@ function dataPopulator(file, index) {
 }
 
 export default function() {
-  console.log('running dataMerger');
   return new Promise(async (res, rej) => {
     try {
       // Looping over each file we imported.
