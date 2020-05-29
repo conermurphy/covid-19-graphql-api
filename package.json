@@ -6,12 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-json-modules index.js",
-    "download": "node --experimental-json-modules ./src/dataFetcher.js"
+    "download": "node ./src/dataFetcher.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.12.0",
+    "apollo-server": "^2.14.1",
     "axios": "^0.19.2",
     "graphql": "^15.0.0",
     "papaparse": "^5.2.0"
