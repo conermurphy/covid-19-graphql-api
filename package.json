@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-json-modules index.js",
-    "download": "node ./src/dataFetcher.js"
+    "download": "node ./src/functions/dataFetcher.js"
   },
   "author": "",
   "license": "ISC",
