@@ -1,5 +1,5 @@
-import dailyData from '../../data/dailyReports/dailyReport.json';
-import allTimeSeries from '../../data/timeSeriesReports/allTimeSeries.json';
+import dailyData from '../../data/dailyReport.json';
+import allTimeSeries from '../../data/allTimeSeries.json';
 
 export default {
   Query: {
