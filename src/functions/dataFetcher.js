@@ -123,9 +123,9 @@ function downloadTimeSeries() {
 
 async function dataFetcherWrapper() {
   // await downloadDaily();
-  await downloadTimeSeries(); // all okay
+  await downloadTimeSeries();
   await dataMerger();
-  // await dataDeleter();
+  await dataDeleter();
 }
 
 dataFetcherWrapper();
