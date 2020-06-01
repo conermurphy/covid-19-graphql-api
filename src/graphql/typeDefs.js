@@ -2,8 +2,11 @@ import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
 const { gql } = require('apollo-server');
+const GraphQLJSON = require('graphql-type-json');
 
 const typeDefs = gql`
+  scalar JSON
+
   type DailyData {
     FIPS: String
     Province_State: String
@@ -32,10 +35,20 @@ const typeDefs = gql`
     Active: String
   }
 
+  type TimeSeriesData {
+    uniqueId: String
+    provinceState: String!
+    countryRegion: String!
+    recovered: JSON
+    confirmed: JSON
+    dead: JSON
+  }
+
   type Query {
     getDailyData: [DailyData]
     getDailyCases: [DailyCase]
     getDailyCombinedKey(filter: String): [DailyData]
+    getTimeSeries: [TimeSeriesData]
   }
 `;
 

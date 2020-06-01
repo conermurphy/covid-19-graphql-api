@@ -1,5 +1,10 @@
+import { createRequire } from 'module';
 import dailyData from '../../data/dailyReport.json';
 import allTimeSeries from '../../data/allTimeSeries.json';
+
+const require = createRequire(import.meta.url);
+const { gql } = require('apollo-server');
+const GraphQLJSON = require('graphql-type-json');
 
 export default {
   Query: {
@@ -11,6 +16,9 @@ export default {
     },
     getDailyCombinedKey(parent, args) {
       return dailyData.filter(data => data.Combined_Key.includes(args.filter));
+    },
+    getTimeSeries() {
+      return allTimeSeries;
     },
   },
   DailyData: {
@@ -35,4 +43,5 @@ export default {
       };
     },
   },
+  JSON: GraphQLJSON,
 };
