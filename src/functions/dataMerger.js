@@ -68,46 +68,15 @@ function dataPopulator(file, index) {
       countryRegion,
       [fileName]: cleanedArray,
     };
-    return newObj;
+
+    const found = newConfirmedArray.find(
+      el =>
+        el.uniqueId ===
+        `${d['Province/State'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(regex, '-')}`
+    );
+
+    found[fileName] = newObj[fileName];
   });
-
-  // const fileObject = fileData.forEach(d => console.log(d));
-
-  // Looping over each line of data in the passed in file so we can create arrays based on each line.
-  // file.forEach(d => {
-  //   // Creating an array of each line of data using Object.entries().
-  //   const arrayData = Object.keys(d);
-
-  //   // Looping over each item in array created from Object.entries().
-  //   arrayData.forEach(i => {
-  //     // Checking if the 0 index item in the array starts with a number to find if it's a date property.
-  //     if (i[0].slice(0, 1).match(/[0-9]/g)) {
-  //       // padding the date so it is in 6 digit format like: 010120
-
-  //       // const cleanedDate = i[0]
-  //       //   .split('/')
-  //       //   .map(s => s.padStart(2, 0))
-  //       //   .join('');
-
-  //       // Creating a new property inside the object we created earlier and assigning it a value of the original value for that date but this time using the cleanedDate.
-
-  //       // data[fileName][cleanedDate] = i[1]; // eslint-disable-line
-
-  //       data[fileName][i[0]] = i[1]; // eslint-disable-line
-  //     }
-  //   });
-
-  // finding the existing object for the country / province we are currently looping over in the file by using uniqueID.
-  // const found = newConfirmedArray.find(
-  //   el =>
-  //     el.uniqueId ===
-  //     `${d['Province/State'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(regex, '-')}`
-  // );
-
-  // Creating a new property on the found country object created in the main array earlier by the countryPopulator function, by using the populated object populated in this function.
-  // found[fileName] = data[fileName];
-  // });
-  writeJSONFile(newArray, `./data/${fileName}-converted.json`);
 }
 
 export default function() {
