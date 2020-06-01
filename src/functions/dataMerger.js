@@ -38,7 +38,7 @@ function dataPopulator(file, index) {
   // creating a new sub-object on the data object.
   data[fileName] = {};
 
-  const newArray = file.map(d => {
+  file.forEach(d => {
     const { 'Province/State': provinceState, 'Country/Region': countryRegion, Lat, Long, ...caseData } = d;
     const dates = Object.entries({ ...caseData });
     const cleanedArray = dates
