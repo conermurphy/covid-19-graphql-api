@@ -40,6 +40,25 @@ function dataPopulator(file, index) {
 
   const newArray = file.map(d => {
     const { 'Province/State': provinceState, 'Country/Region': countryRegion, Lat, Long, ...caseData } = d;
+    const dates = Object.entries({ ...caseData });
+    const cleanedArray = dates
+      .map(date => {
+        let cleanedDate = date[0];
+        if (date[0].slice(0, 1).match(/[0-9]/g)) {
+          // padding the date so it is in 6 digit format like: 010120
+
+          cleanedDate = date[0]
+            .split('/')
+            .map(s => s.padStart(2, 0))
+            .join('');
+        }
+        return [cleanedDate, date[1]];
+      })
+      .reduce((p, c) => {
+        p[c[0]] = c[1];
+        return p;
+      }, {});
+
     const newObj = {
       uniqueID: `${d['Province/State'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(
         regex,
@@ -47,7 +66,7 @@ function dataPopulator(file, index) {
       )}`,
       provinceState,
       countryRegion,
-      [fileName]: { ...caseData },
+      [fileName]: cleanedArray,
     };
     return newObj;
   });
