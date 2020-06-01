@@ -122,10 +122,10 @@ function downloadTimeSeries() {
 }
 
 async function dataFetcherWrapper() {
-  await downloadDaily();
-  await downloadTimeSeries();
+  // await downloadDaily();
+  await downloadTimeSeries(); // all okay
   await dataMerger();
-  await dataDeleter();
+  // await dataDeleter();
 }
 
 dataFetcherWrapper();
