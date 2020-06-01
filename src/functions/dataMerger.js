@@ -26,6 +26,8 @@ function countryPopulator(file) {
 
 // function to populate data into the objects created in the countryPopulator function.
 function dataPopulator(file, index) {
+  // Error is in here somewhere !!!!!!!!!!!
+
   // Knowing what file has been passed into the array for the relevant object to be created.
   const fileName = {
     0: 'confirmed',
@@ -56,13 +58,14 @@ function dataPopulator(file, index) {
       }
     });
     // finding the existing object for the country / province we are currently looping over in the file by using uniqueID.
-    const found = newConfirmedArray.find(
+    const found = newConfirmedArray.findIndex(
       el =>
         el.uniqueId ===
         `${d['Province/State'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(regex, '-')}`
     );
     // Creating a new property on the found country object created in the main array earlier by the countryPopulator function, by using the populated object populated in this function.
-    found[fileName] = data[fileName];
+    newConfirmedArray[found][fileName] = data[fileName];
+    console.log(newConfirmedArray);
   });
 }
 
