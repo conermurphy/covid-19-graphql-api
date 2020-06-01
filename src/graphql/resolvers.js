@@ -3,7 +3,6 @@ import dailyData from '../../data/dailyReport.json';
 import allTimeSeries from '../../data/allTimeSeries.json';
 
 const require = createRequire(import.meta.url);
-const { gql } = require('apollo-server');
 const GraphQLJSON = require('graphql-type-json');
 
 export default {
@@ -17,8 +16,11 @@ export default {
     getDailyCombinedKey(parent, args) {
       return dailyData.filter(data => data.Combined_Key.includes(args.filter));
     },
-    getTimeSeries() {
+    getTimeSeriesAll() {
       return allTimeSeries;
+    },
+    getTimeSeries(parent, args) {
+      return allTimeSeries.filter(data => data.uniqueId === args.uniqueId);
     },
   },
   DailyData: {
