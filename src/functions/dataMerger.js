@@ -54,9 +54,9 @@ function dataPopulator(file, index) {
         }
         return [cleanedDate, date[1]];
       })
-      .reduce((p, c) => {
-        p[c[0]] = c[1];
-        return p;
+      .reduce((acc, item) => {
+        acc[item[0]] = item[1];
+        return acc;
       }, {});
 
     const newObj = {
