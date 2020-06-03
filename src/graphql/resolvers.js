@@ -1,9 +1,9 @@
 import { createRequire } from 'module';
-import dailyData from '../../data/dailyReport.json';
-import allTimeSeries from '../../data/allTimeSeries.json';
 
 const require = createRequire(import.meta.url);
 const GraphQLJSON = require('graphql-type-json');
+const dailyData = require('../../data/dailyReport.json');
+const allTimeSeries = require('../../data/allTimeSeries.json');
 
 export default {
   Query: {
