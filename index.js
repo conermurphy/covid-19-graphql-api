@@ -5,8 +5,8 @@ import resolvers from './src/graphql/resolvers.js';
 const require = createRequire(import.meta.url);
 const { ApolloServer } = require('apollo-server');
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ typeDefs, resolvers, introspection: true, playground: true });
 
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
+server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
 });
