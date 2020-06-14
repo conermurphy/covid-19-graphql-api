@@ -2,7 +2,7 @@ import fs from 'fs';
 
 function dataDeleter() {
   return Promise.all(
-    ['confirmed', 'deaths', 'recovered', 'dailyReport'].map(
+    ['confirmed', 'deaths', 'recovered', 'dailyReport', 'US-confirmed', 'US-deaths'].map(
       file =>
         new Promise((res, rej) => {
           try {
