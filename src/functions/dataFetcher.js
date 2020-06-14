@@ -148,6 +148,7 @@ async function dataFetcherWrapper() {
   await downloadDaily();
   await downloadTimeSeries();
   await downloadUSData();
+  // Insert totals count function here...
   await usDataMerger();
   await dataNormalise();
   await dataMerger();
