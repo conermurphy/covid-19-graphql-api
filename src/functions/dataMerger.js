@@ -21,9 +21,9 @@ function countryPopulator(file) {
       combinedKey: Object.prototype.hasOwnProperty.call(data, 'Combined/Key')
         ? data['Combined/Key'].replace(regex, '-')
         : `${data['Country/Region'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Province/State'].replace(
-            regex,
-            '-'
-          )}`,
+          regex,
+          '-'
+        )}`,
       provinceState: data['Province/State'],
       countryRegion: data['Country/Region'],
     });
@@ -45,7 +45,7 @@ function dataPopulator(file, index) {
   data[fileName] = {};
 
   file.forEach(d => {
-    const { 'Province/State': provinceState, 'Country/Region': countryRegion, 'Combined/Key': combinedKey, Lat, Long, ...caseData } = d;
+    const { 'Province/State': provinceState, 'Country/Region': countryRegion, Lat, Long, ...caseData } = d;
     const dates = Object.entries({ ...caseData });
     const cleanedArray = dates
       .map(date => {
