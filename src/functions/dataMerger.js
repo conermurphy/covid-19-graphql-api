@@ -2,7 +2,6 @@ import fs from 'fs';
 import writeJSONFile from './jsonWriter.js';
 
 const newConfirmedArray = [];
-const regex = /([ ',])+/g; // regex used for replacing all spaces, ', , to create the unique ID's.
 
 // function to create an array of all the unique countries and provinces.
 function countryPopulator(file) {
