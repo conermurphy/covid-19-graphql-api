@@ -31,9 +31,8 @@ function dataPopulator(file, index) {
 
   file.forEach(d => {
     const { provinceState, countryRegion, combinedKey, caseData } = d;
-    const array = newConfirmedArray.find(el => {
-      el.combinedKey === combinedKey;
-    });
+    const arrayLocation = newConfirmedArray.find(el => el.combinedKey === combinedKey);
+    arrayLocation[fileName] = caseData;
   });
 }
 
