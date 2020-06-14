@@ -14,7 +14,7 @@ function countryPopulator(file) {
     }
     // if no duplicate is found then push a new object to the array with the countries province, country and a custom unique id.
     newConfirmedArray.push({
-      uniqueId: `${data['Province/State'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Country/Region'].replace(
+      uniqueId: `${data['Country/Region'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Province/State'].replace(
         regex,
         '-'
       )}`,
@@ -60,7 +60,7 @@ function dataPopulator(file, index) {
       }, {});
 
     const newObj = {
-      uniqueID: `${d['Province/State'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(
+      uniqueID: `${d['Country/Region'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Province/State'].replace(
         regex,
         '-'
       )}`,
@@ -72,7 +72,7 @@ function dataPopulator(file, index) {
     const found = newConfirmedArray.find(
       el =>
         el.uniqueId ===
-        `${d['Province/State'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Country/Region'].replace(regex, '-')}`
+        `${d['Country/Region'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Province/State'].replace(regex, '-')}`
     );
 
     found[fileName] = newObj[fileName];
