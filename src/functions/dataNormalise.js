@@ -47,8 +47,8 @@ function arrayMaker(filePath, status) {
               cleanedArray.push({
                 provinceState,
                 countryRegion,
-                combinedKey: combinedKey.replace(regex, '-'),
-                [status]: caseData,
+                combinedKey: combinedKey.replace(regex, '-').replace('Unassigned-', ''),
+                caseData,
               });
             }
             if (!Object.prototype.hasOwnProperty.call(d, 'Combined/Key')) {
@@ -59,7 +59,7 @@ function arrayMaker(filePath, status) {
                 provinceState,
                 countryRegion,
                 combinedKey: `${countryRegion.replace(regex, '-')}${provinceState === '' ? '' : '-'}${provinceState.replace(regex, '-')}`,
-                [status]: caseData,
+                caseData,
               });
             }
           } else {
