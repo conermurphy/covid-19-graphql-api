@@ -25,7 +25,37 @@ function dateCleaner(dateArray) {
     }, {});
 }
 
-function arrayMaker(filePath, status) {
+function statesUpdater(array) {
+  array
+    .filter(d => {
+      const { provinceState, countryRegion, combinedKey } = d;
+      return combinedKey === `${provinceState}-${countryRegion}`;
+    })
+    .forEach(a => {
+      const allProvinceData = array.filter(i => i.provinceState === a.provinceState);
+      const apdCaseValues = allProvinceData
+        .map(apd => Object.entries(apd.caseData))
+        .flat()
+        .reduce((acc, item) => {
+          let [date, value] = item;
+          value = parseInt(value) ?? 0;
+          if (typeof acc[date] === 'undefined') acc[date] = 0;
+          acc[date] += value;
+          return acc;
+        }, {});
+      a.caseData = apdCaseValues;
+    });
+}
+
+function statesConverter(array) {
+  array.forEach(obj => {
+    Object.keys(obj.caseData).forEach(k => {
+      obj.caseData[k] = `${obj.caseData[k]}`;
+    });
+  });
+}
+
+function arrayMaker(filePath) {
   return new Promise((res, rej) => {
     try {
       fs.readFile(filePath, 'utf-8', (err, data) => {
@@ -66,6 +96,8 @@ function arrayMaker(filePath, status) {
             res(parsedData);
           }
         });
+        statesUpdater(cleanedArray);
+        statesConverter(cleanedArray);
         res(cleanedArray);
       });
     } catch (err) {
@@ -82,7 +114,7 @@ export default function() {
         new Promise(async (res, rej) => {
           try {
             const filePath = `./data/${status}.json`;
-            const cleanedArray = await arrayMaker(filePath, status);
+            const cleanedArray = await arrayMaker(filePath);
             await writeJSONFile(cleanedArray, filePath).then(() => res());
           } catch (err) {
             console.error(err);

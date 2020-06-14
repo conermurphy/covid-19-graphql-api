@@ -150,7 +150,7 @@ async function dataFetcherWrapper() {
   await downloadUSData();
   await usDataMerger();
   await dataNormalise();
-  await dataMerger();
+  // await dataMerger();
   // await dataDeleter();
 }
 
