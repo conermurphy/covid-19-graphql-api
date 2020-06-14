@@ -12,7 +12,18 @@ function replaceData(data) {
       finalData = finalData.replace(countryRegex, 'Country/Region');
       finalData = finalData.replace(provinceRegex, 'Province/State');
       finalData = finalData.replace(combinedKeyRegex, 'Combined/Key');
-      res(JSON.parse(finalData));
+      finalData = JSON.parse(finalData);
+      const cleanData = finalData.map(d => {
+        delete d.UID;
+        delete d.iso2;
+        delete d.iso3;
+        delete d.code3;
+        delete d.FIPS;
+        delete d.Admin2;
+        delete d.Population;
+        return d;
+      });
+      res(cleanData);
     } catch (err) {
       console.error(err);
       rej(err);

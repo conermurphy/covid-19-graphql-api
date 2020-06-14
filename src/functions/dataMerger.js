@@ -2,22 +2,28 @@ import fs from 'fs';
 import writeJSONFile from './jsonWriter.js';
 
 const newConfirmedArray = [];
-const regex = /([ ',])/g; // regex used for replacing all spaces, ', , to create the unique ID's.
+const regex = /([ ',])+/g; // regex used for replacing all spaces, ', , to create the unique ID's.
 
 // function to create an array of all the unique countries and provinces.
 function countryPopulator(file) {
   file.forEach(data => {
     // Looping over each file and accessing the objects inside it.
-    if (newConfirmedArray.some(el => el.provinceState === data['Province/State'] && el.countryRegion === data['Country/Region'])) {
+    if (Object.prototype.hasOwnProperty.call(data, 'Combined/Key')) {
+      if (newConfirmedArray.some(el => el.combinedKey === data['Combined/Key'].replace(regex, '-'))) {
+        return;
+      }
+    } else if (newConfirmedArray.some(el => el.provinceState === data['Province/State'] && el.countryRegion === data['Country/Region'])) {
       // if a duplicate country / province is found exit the loop.
       return;
     }
     // if no duplicate is found then push a new object to the array with the countries province, country and a custom unique id.
     newConfirmedArray.push({
-      uniqueId: `${data['Country/Region'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Province/State'].replace(
-        regex,
-        '-'
-      )}`,
+      combinedKey: Object.prototype.hasOwnProperty.call(data, 'Combined/Key')
+        ? data['Combined/Key'].replace(regex, '-')
+        : `${data['Country/Region'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Province/State'].replace(
+            regex,
+            '-'
+          )}`,
       provinceState: data['Province/State'],
       countryRegion: data['Country/Region'],
     });
@@ -39,7 +45,7 @@ function dataPopulator(file, index) {
   data[fileName] = {};
 
   file.forEach(d => {
-    const { 'Province/State': provinceState, 'Country/Region': countryRegion, Lat, Long, ...caseData } = d;
+    const { 'Province/State': provinceState, 'Country/Region': countryRegion, 'Combined/Key': combinedKey, Lat, Long, ...caseData } = d;
     const dates = Object.entries({ ...caseData });
     const cleanedArray = dates
       .map(date => {
@@ -60,19 +66,18 @@ function dataPopulator(file, index) {
       }, {});
 
     const newObj = {
-      uniqueID: `${d['Country/Region'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Province/State'].replace(
-        regex,
-        '-'
-      )}`,
+      combinedKey: Object.prototype.hasOwnProperty.call(d, 'Combined/Key')
+        ? d['Combined/Key'].replace(regex, '-')
+        : `${d['Country/Region'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Province/State'].replace(regex, '-')}`,
       provinceState,
       countryRegion,
       [fileName]: cleanedArray,
     };
 
-    const found = newConfirmedArray.find(
-      el =>
-        el.uniqueId ===
-        `${d['Country/Region'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Province/State'].replace(regex, '-')}`
+    const found = newConfirmedArray.find(el =>
+      el.combinedKey === Object.prototype.hasOwnProperty.call(d, 'Combined/Key')
+        ? d['Combined/Key'].replace(regex, '-')
+        : `${d['Country/Region'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Province/State'].replace(regex, '-')}`
     );
 
     found[fileName] = newObj[fileName];
@@ -104,8 +109,8 @@ export default function() {
 
       // Sorting the populated array by uniqueId A-Z.
       const sortedArray = await newConfirmedArray.sort((a, b) => {
-        const nameA = a.uniqueId.toUpperCase();
-        const nameB = b.uniqueId.toUpperCase();
+        const nameA = a.countryRegion.toUpperCase();
+        const nameB = b.countryRegion.toUpperCase();
         return nameA < nameB ? -1 : 1;
       });
 
