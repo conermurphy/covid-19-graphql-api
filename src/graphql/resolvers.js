@@ -20,7 +20,7 @@ export default {
       return allTimeSeries;
     },
     getTimeSeries(parent, args) {
-      return allTimeSeries.filter(data => data.uniqueId === args.uniqueId);
+      return allTimeSeries.filter(data => data.combinedKey === args.combinedKey);
     },
   },
   DailyData: {

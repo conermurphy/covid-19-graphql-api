@@ -35,7 +35,7 @@ const typeDefs = gql`
   }
 
   type TimeSeriesData {
-    uniqueId: String
+    combinedKey: String
     provinceState: String!
     countryRegion: String!
     recovered: JSON
@@ -48,7 +48,7 @@ const typeDefs = gql`
     getDailyCases: [DailyCase]
     getDailyCombinedKey(Combined_Key: String): [DailyData]
     getTimeSeriesAll: [TimeSeriesData]
-    getTimeSeries(uniqueId: String): [TimeSeriesData]
+    getTimeSeries(combinedKey: String): [TimeSeriesData]
   }
 `;
 
