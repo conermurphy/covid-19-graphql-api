@@ -47,7 +47,7 @@ function arrayMaker(filePath, status) {
               cleanedArray.push({
                 provinceState,
                 countryRegion,
-                combinedKey,
+                combinedKey: combinedKey.replace(regex, '-'),
                 [status]: caseData,
               });
             }
@@ -75,7 +75,7 @@ function arrayMaker(filePath, status) {
   });
 }
 
-function dataNormalise() {
+export default function() {
   return Promise.all(
     ['confirmed', 'deaths', 'recovered'].map(
       status =>
@@ -92,5 +92,3 @@ function dataNormalise() {
     )
   );
 }
-
-dataNormalise();

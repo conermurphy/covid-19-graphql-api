@@ -6,26 +6,16 @@ const regex = /([ ',])+/g; // regex used for replacing all spaces, ', , to creat
 
 // function to create an array of all the unique countries and provinces.
 function countryPopulator(file) {
-  file.forEach(data => {
+  file.forEach(({ provinceState, countryRegion, combinedKey }) => {
     // Looping over each file and accessing the objects inside it.
-    if (Object.prototype.hasOwnProperty.call(data, 'Combined/Key')) {
-      if (newConfirmedArray.some(el => el.combinedKey === data['Combined/Key'].replace(regex, '-'))) {
-        return;
-      }
-    } else if (newConfirmedArray.some(el => el.provinceState === data['Province/State'] && el.countryRegion === data['Country/Region'])) {
-      // if a duplicate country / province is found exit the loop.
+    if (newConfirmedArray.some(el => el.combinedKey === combinedKey)) {
       return;
     }
     // if no duplicate is found then push a new object to the array with the countries province, country and a custom unique id.
     newConfirmedArray.push({
-      combinedKey: Object.prototype.hasOwnProperty.call(data, 'Combined/Key')
-        ? data['Combined/Key'].replace(regex, '-')
-        : `${data['Country/Region'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Province/State'].replace(
-            regex,
-            '-'
-          )}`,
-      provinceState: data['Province/State'],
-      countryRegion: data['Country/Region'],
+      combinedKey,
+      provinceState,
+      countryRegion,
     });
   });
 }
@@ -98,7 +88,7 @@ export default function() {
                 fs.readFile(`./data/${file}.json`, 'utf-8', (err, data) => {
                   const json = JSON.parse(data);
                   countryPopulator(json); // function to add a unqiue list of countries to the array.
-                  dataPopulator(json, index); // populating data under each country as a sub object.
+                  // dataPopulator(json, index); // populating data under each country as a sub object.
                   resolve(newConfirmedArray);
                 });
               } catch (err) {
