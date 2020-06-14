@@ -121,11 +121,33 @@ function downloadTimeSeries() {
   );
 }
 
+function downloadUSData() {
+  return Promise.all(
+    ['confirmed', 'deaths'].map(
+      status =>
+        new Promise((res, rej) => {
+          try {
+            const fileName = `./data/US-${status}`;
+            const usURL = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${status}_US.csv`;
+
+            dataFetcher(usURL, fileName).then(() => {
+              res();
+            });
+          } catch (err) {
+            console.error(err);
+            rej(err);
+          }
+        })
+    )
+  );
+}
+
 async function dataFetcherWrapper() {
   await downloadDaily();
   await downloadTimeSeries();
-  await dataMerger();
-  await dataDeleter();
+  await downloadUSData();
+  // await dataMerger();
+  // await dataDeleter();
 }
 
 dataFetcherWrapper();
