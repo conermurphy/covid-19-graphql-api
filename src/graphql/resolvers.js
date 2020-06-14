@@ -22,6 +22,9 @@ export default {
     getTimeSeries(parent, args) {
       return allTimeSeries.filter(data => data.combinedKey === args.combinedKey);
     },
+    getProvinceState(parent, args) {
+      return allTimeSeries.filter(data => data.countryRegion.includes(args.countryRegion));
+    },
   },
   DailyData: {
     DailyCase(parent) {

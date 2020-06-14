@@ -49,6 +49,7 @@ const typeDefs = gql`
     getDailyCombinedKey(Combined_Key: String): [DailyData]
     getTimeSeriesAll: [TimeSeriesData]
     getTimeSeries(combinedKey: String): [TimeSeriesData]
+    getProvinceState(countryRegion: String): [TimeSeriesData]
   }
 `;
 
