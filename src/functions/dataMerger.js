@@ -21,9 +21,9 @@ function countryPopulator(file) {
       combinedKey: Object.prototype.hasOwnProperty.call(data, 'Combined/Key')
         ? data['Combined/Key'].replace(regex, '-')
         : `${data['Country/Region'].replace(regex, '-')}${data['Province/State'] === '' ? '' : '-'}${data['Province/State'].replace(
-          regex,
-          '-'
-        )}`,
+            regex,
+            '-'
+          )}`,
       provinceState: data['Province/State'],
       countryRegion: data['Country/Region'],
     });
@@ -79,6 +79,8 @@ function dataPopulator(file, index) {
         ? d['Combined/Key'].replace(regex, '-')
         : `${d['Country/Region'].replace(regex, '-')}${d['Province/State'] === '' ? '' : '-'}${d['Province/State'].replace(regex, '-')}`
     );
+
+    console.log(found);
 
     found[fileName] = newObj[fileName];
   });

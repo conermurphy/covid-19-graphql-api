@@ -148,7 +148,7 @@ async function dataFetcherWrapper() {
   await downloadTimeSeries();
   await downloadUSData();
   await usDataMerger();
-  await dataMerger();
+  // await dataMerger();
   // await dataDeleter();
 }
 
