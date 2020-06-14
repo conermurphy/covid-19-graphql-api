@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-function usDataMerger() {
+export default function() {
   return Promise.all(
     ['confirmed', 'deaths'].map(
       status =>
@@ -25,5 +25,3 @@ function usDataMerger() {
     )
   );
 }
-
-usDataMerger();

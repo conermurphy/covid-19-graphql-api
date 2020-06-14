@@ -5,7 +5,7 @@ import dateFetcher from './dateFetcher.js';
 import writeJSONFile from './jsonWriter.js';
 import dataMerger from './dataMerger.js';
 import dataDeleter from './dataDeleter.js';
-// import usDataMerger from './usDataMerger.js';
+import usDataMerger from './usDataMerger.js';
 
 function downloadFile(url, filePath) {
   // Creating a new promise to download the file
@@ -147,9 +147,9 @@ async function dataFetcherWrapper() {
   await downloadDaily();
   await downloadTimeSeries();
   await downloadUSData();
-  // await usDataMerger();
-  // await dataMerger();
-  // await dataDeleter();
+  await usDataMerger();
+  await dataMerger();
+  await dataDeleter();
 }
 
 dataFetcherWrapper();
