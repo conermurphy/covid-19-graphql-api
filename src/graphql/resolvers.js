@@ -25,6 +25,9 @@ export default {
     getProvinceState(parent, args) {
       return allTimeSeries.filter(data => data.countryRegion.includes(args.countryRegion));
     },
+    getUSSubStateLocations(parent, args) {
+      return allTimeSeries.filter(data => data.countryRegion === 'US' && data.provinceState.includes(args.provinceState));
+    },
   },
   DailyData: {
     DailyCase(parent) {

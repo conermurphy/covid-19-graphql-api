@@ -50,6 +50,7 @@ const typeDefs = gql`
     getTimeSeriesAll: [TimeSeriesData]
     getTimeSeries(combinedKey: String): [TimeSeriesData]
     getProvinceState(countryRegion: String): [TimeSeriesData]
+    getUSSubStateLocations(provinceState: String): [TimeSeriesData]
   }
 `;
 
