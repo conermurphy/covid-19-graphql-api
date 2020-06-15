@@ -1,7 +1,7 @@
 import fs from 'fs';
 import writeJSONFile from './jsonWriter.js';
 
-function dataReducer(path, status) {
+function dataReducer(path) {
   return new Promise((res, rej) => {
     try {
       fs.readFile(path, 'utf-8', (err, data) => {
@@ -32,16 +32,43 @@ function dataReducer(path, status) {
 //   });
 // }
 
-function objCreator() {
+function objLabeller(arr, status) {
+  return new Promise((res, rej) => {
+    try {
+      const newObj = {};
+      newObj[status] = arr;
+      console.log(newObj);
+      res(newObj);
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
+}
+
+function objCreator(status) {
+  return new Promise(async (res, rej) => {
+    try {
+      const filePath = `./data/${status}.json`;
+      const convertObj = await dataReducer(filePath);
+      // console.log(labelledData);statuses
+      res(convertObj);
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
+}
+
+function totalMaker() {
   return Promise.all(
     ['confirmed', 'deaths', 'recovered'].map(
       status =>
         new Promise(async (res, rej) => {
           try {
-            const filePath = `./data/${status}.json`;
-            const convertObj = await dataReducer(filePath, status);
-            // console.log(arrStatus);
-            res(convertObj);
+            const arrData = await objCreator(status);
+            // const labelledData = await objLabeller(arrData, status);
+            await writeJSONFile(arrData, './data/totals.json').then(() => res());
           } catch (err) {
             console.error(err);
             rej(err);
@@ -49,19 +76,6 @@ function objCreator() {
         })
     )
   );
-}
-
-function totalMaker() {
-  return new Promise(async (res, rej) => {
-    try {
-      const arrData = await objCreator();
-      console.log(arrData);
-      await writeJSONFile(arrData, './data/totals.json').then(() => res());
-    } catch (err) {
-      console.error(err);
-      rej(err);
-    }
-  });
 }
 
 totalMaker();
