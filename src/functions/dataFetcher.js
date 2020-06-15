@@ -151,8 +151,8 @@ async function dataFetcherWrapper() {
   // Insert totals count function here...
   await usDataMerger();
   await dataNormalise();
-  await dataMerger();
-  await dataDeleter();
+  // await dataMerger();
+  // await dataDeleter();
 }
 
 dataFetcherWrapper();
