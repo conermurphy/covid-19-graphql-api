@@ -103,7 +103,7 @@ function finalArrayReducer(arr) {
   });
 }
 
-function totalMaker() {
+export default function() {
   return new Promise(async (res, rej) => {
     try {
       const finalArray = await totalArrayGenerator();
@@ -115,5 +115,3 @@ function totalMaker() {
     }
   });
 }
-
-totalMaker();

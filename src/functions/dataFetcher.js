@@ -7,6 +7,7 @@ import dataMerger from './dataMerger.js';
 import dataDeleter from './dataDeleter.js';
 import usDataMerger from './usDataMerger.js';
 import dataNormalise from './dataNormalise.js';
+import totalMaker from './totalMaker.js';
 
 function downloadFile(url, filePath) {
   // Creating a new promise to download the file
@@ -148,11 +149,11 @@ async function dataFetcherWrapper() {
   await downloadDaily();
   await downloadTimeSeries();
   await downloadUSData();
-  // Insert totals count function here...
   await usDataMerger();
   await dataNormalise();
-  // await dataMerger();
-  // await dataDeleter();
+  await totalMaker();
+  await dataMerger();
+  await dataDeleter();
 }
 
 dataFetcherWrapper();
