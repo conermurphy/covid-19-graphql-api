@@ -26,6 +26,12 @@ function dataReducer(path, status) {
   });
 }
 
+// function stringifyObj(obj) {
+//   const newObj = Object.keys(obj).forEach(k => {
+//     obj[k] = `${obj[k]}`;
+//   });
+// }
+
 function objCreator() {
   return Promise.all(
     ['confirmed', 'deaths', 'recovered'].map(
@@ -34,6 +40,7 @@ function objCreator() {
           try {
             const filePath = `./data/${status}.json`;
             const convertObj = await dataReducer(filePath, status);
+            // console.log(arrStatus);
             res(convertObj);
           } catch (err) {
             console.error(err);
