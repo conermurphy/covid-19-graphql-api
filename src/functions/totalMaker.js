@@ -30,7 +30,8 @@ function objLabeller(arr, status) {
   return new Promise((res, rej) => {
     try {
       const newObj = {};
-      newObj[status] = arr;
+      const state = status === 'deaths' ? 'dead' : status;
+      newObj[state] = arr;
       res(newObj);
     } catch (err) {
       console.error(err);
@@ -108,7 +109,7 @@ export default function() {
     try {
       const finalArray = await totalArrayGenerator();
       const reducedFinalArray = await finalArrayReducer(finalArray);
-      await writeJSONFile(reducedFinalArray, './data/totals.json').then(() => res());
+      await writeJSONFile(reducedFinalArray, './data/timeSeriesTotals.json').then(() => res());
     } catch (err) {
       console.error(err);
       rej(err);

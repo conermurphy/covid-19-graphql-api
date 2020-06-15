@@ -43,6 +43,12 @@ const typeDefs = gql`
     dead: JSON
   }
 
+  type TimeSeriesTotal {
+    confirmed: JSON
+    recovered: JSON
+    dead: JSON
+  }
+
   type Query {
     getDailyData: [DailyData]
     getDailyCases: [DailyCase]
@@ -51,6 +57,7 @@ const typeDefs = gql`
     getTimeSeries(combinedKey: String): [TimeSeriesData]
     getProvinceState(countryRegion: String): [TimeSeriesData]
     getUSSubStateLocations(provinceState: String): [TimeSeriesData]
+    getTimeSeriesTotal: TimeSeriesTotal
   }
 `;
 

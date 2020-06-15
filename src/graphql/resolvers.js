@@ -4,6 +4,7 @@ const require = createRequire(import.meta.url);
 const GraphQLJSON = require('graphql-type-json');
 const dailyData = require('../../data/dailyReport.json');
 const allTimeSeries = require('../../data/allTimeSeries.json');
+const timeSeriesTotal = require('../../data/timeSeriesTotals.json');
 
 export default {
   Query: {
@@ -27,6 +28,9 @@ export default {
     },
     getUSSubStateLocations(parent, args) {
       return allTimeSeries.filter(data => data.countryRegion === 'US' && data.provinceState.includes(args.provinceState));
+    },
+    getTimeSeriesTotal() {
+      return timeSeriesTotal;
     },
   },
   DailyData: {
