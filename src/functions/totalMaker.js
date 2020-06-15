@@ -39,11 +39,21 @@ function objLabeller(arr, status) {
   });
 }
 
-// function stringifyObj(obj) {
-//   const newObj = Object.keys(obj).forEach(k => {
-//     obj[k] = `${obj[k]}`;
-//   });
-// }
+function stringifyObj(obj) {
+  return new Promise((res, rej) => {
+    try {
+      const stringedObj = Object.entries(obj).reduce((acc, item) => {
+        const [s, d] = item;
+        acc[s] = `${d}`;
+        return acc;
+      }, {});
+      res(stringedObj);
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
+}
 
 function objCreator(status) {
   return new Promise(async (res, rej) => {
@@ -65,7 +75,8 @@ function totalArrayGenerator() {
         new Promise(async (res, rej) => {
           try {
             const arrData = await objCreator(status);
-            const labelledData = await objLabeller(arrData, status);
+            const stringData = await stringifyObj(arrData);
+            const labelledData = await objLabeller(stringData, status);
             res(labelledData);
           } catch (err) {
             console.error(err);
