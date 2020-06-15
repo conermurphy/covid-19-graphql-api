@@ -26,18 +26,11 @@ function dataReducer(path) {
   });
 }
 
-// function stringifyObj(obj) {
-//   const newObj = Object.keys(obj).forEach(k => {
-//     obj[k] = `${obj[k]}`;
-//   });
-// }
-
 function objLabeller(arr, status) {
   return new Promise((res, rej) => {
     try {
       const newObj = {};
       newObj[status] = arr;
-      console.log(newObj);
       res(newObj);
     } catch (err) {
       console.error(err);
@@ -46,12 +39,17 @@ function objLabeller(arr, status) {
   });
 }
 
+// function stringifyObj(obj) {
+//   const newObj = Object.keys(obj).forEach(k => {
+//     obj[k] = `${obj[k]}`;
+//   });
+// }
+
 function objCreator(status) {
   return new Promise(async (res, rej) => {
     try {
       const filePath = `./data/${status}.json`;
       const convertObj = await dataReducer(filePath);
-      // console.log(labelledData);statuses
       res(convertObj);
     } catch (err) {
       console.error(err);
@@ -60,15 +58,15 @@ function objCreator(status) {
   });
 }
 
-function totalMaker() {
+function totalArrayGenerator() {
   return Promise.all(
     ['confirmed', 'deaths', 'recovered'].map(
       status =>
         new Promise(async (res, rej) => {
           try {
             const arrData = await objCreator(status);
-            // const labelledData = await objLabeller(arrData, status);
-            await writeJSONFile(arrData, './data/totals.json').then(() => res());
+            const labelledData = await objLabeller(arrData, status);
+            res(labelledData);
           } catch (err) {
             console.error(err);
             rej(err);
@@ -76,6 +74,35 @@ function totalMaker() {
         })
     )
   );
+}
+
+function finalArrayReducer(arr) {
+  return new Promise((res, rej) => {
+    try {
+      const newArr = arr.reduce((acc, item) => {
+        const [[s, d]] = Object.entries(item);
+        acc[s] = d;
+        return acc;
+      }, {});
+      res(newArr);
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
+}
+
+function totalMaker() {
+  return new Promise(async (res, rej) => {
+    try {
+      const finalArray = await totalArrayGenerator();
+      const reducedFinalArray = await finalArrayReducer(finalArray);
+      await writeJSONFile(reducedFinalArray, './data/totals.json').then(() => res());
+    } catch (err) {
+      console.error(err);
+      rej(err);
+    }
+  });
 }
 
 totalMaker();
