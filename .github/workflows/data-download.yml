@@ -2,7 +2,7 @@ name: data-download
 
 on:
   schedule: 
-      - cron: '15,30 * * * *'
+      - cron: '00 5 * * *'
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
     - run: npm install
     - run: npm run download
     - name: pull changes
-      run: git pull origin master
+      run: git config pull.ff only
     - name: stage files
       run: git add .
     - name: Commit files
