@@ -146,7 +146,7 @@ function downloadUSData() {
 }
 
 async function dataFetcherWrapper() {
-  await downloadDaily();
+  // await downloadDaily();
   await downloadTimeSeries();
   await downloadUSData();
   await usDataMerger();
