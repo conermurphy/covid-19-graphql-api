@@ -17,6 +17,8 @@ jobs:
         node-version: '14.x'
     - run: npm install
     - run: npm run download
+    - name: pull changes
+      run: git pull origin master
     - name: stage files
       run: git add .
     - name: Commit files
